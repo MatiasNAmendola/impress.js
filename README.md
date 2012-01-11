@@ -1,3 +1,13 @@
+Editing proof of concept for impress.js
+============
+
+This is my experiment with live editing impress.js presentations.
+
+Usage: While holding down your mouse button use WSAD QE and ZX to manipulate the slide
+
+Original readme:
+----------------
+
 impress.js
 ============
 
