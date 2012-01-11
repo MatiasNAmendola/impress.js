@@ -145,7 +145,7 @@
         scale:     { x: 1, y: 1, z: 1 }
     };
 
-    steps.forEach(function ( el, idx ) {
+    var drawSlide=function ( el, idx ) {
         var data = el.dataset,
             step = {
                 translate: {
@@ -180,7 +180,12 @@
             transformStyle: "preserve-3d"
         });
         
-    });
+    }
+    
+    //all API I needed. This should not work like that I guess ;)
+    window['--drawSlideGlobalHandler']=drawSlide;
+    
+    steps.forEach(drawSlide);
 
     // making given step active
 

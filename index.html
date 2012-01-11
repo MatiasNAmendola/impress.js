@@ -15,6 +15,23 @@
 
 <div id="impress" class="impress-not-supported">
 
+    <div id="beforeedit" class="step slide" data-x="-2000" data-y="-1500">
+    <strong>This is a proof of concept position editor for impress.js</strong>
+        <p>mousedown on a slide to start editing its position</p>
+        <p>when editing use WSAD to move the slide</p>
+        <p>Q and E rotate</p>
+        <p>Z and X scale</p>
+      <strong>use an overview to edit</strong>
+      <p>go to next slide - it's an overwiew for editing</p>
+      <strong>saving data</strong>
+      <p>your changes are not saved yet, but it won't be hard - take a look at document.getElementById('impress').innerHTML</p>
+      
+    </div>
+    
+    <div id="edit" class="step" data-x="3000" data-y="1500" data-scale="20">
+    </div>
+    
+    
     <div class="fallback-message">
         <p>Your browser <b>doesn't support the features required</b> by impress.js, so you are presented with a simplified version of this presentation.</p>
         <p>For the best experience please use the latest <b>Chrome</b> or <b>Safari</b> browser. Firefox 10 (to be released soon) will also handle it.</p>
@@ -84,6 +101,103 @@
 </div>
 
 <script src="js/impress.js"></script>
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+<script>
+
+//Proof of concept editor for bartaz's impress.js
+//  by naugtur
+// MIT License if anybody asked
+$(function(){
+  var state={
+      editing:false,
+      node:false,
+      data:{
+        x:0,
+        y:0,
+        rotate:0,
+        scale:0
+        }
+      },
+    config={
+      rotateStep:3,
+      scaleStep:1,
+      moveStep:50
+      },
+    defaults={
+      x:0,
+      y:0,
+      rotate:0,
+      scale:1
+      };
+  $('body').on('mousedown','.step',function(e){
+    state.editing=true;
+    state.node=$(this);
+    state.node.fadeTo(0.6);
+    });
+  $('body').on('mouseup','.step',function(e){
+    state.editing=false;
+    var $t=$(this);
+    $t.fadeTo(1);
+    });
+    
+  $('body').on('keypress',function(e){
+    if(state.editing){
+      var $t=state.node;
+      for(var i in state.data){
+        var tmp=$t.attr('data-'+i);
+        if(tmp===''){tmp=defaults[i]}
+        state.data[i]= ~~(tmp);
+        }
+        //console.log(['before...',state.data,state.node[0]]);
+       
+      switch(e.which){
+        case 113: //q
+          state.data.rotate-=config.rotateStep;
+	        break;
+        case 119: //w
+          state.data.y-=config.moveStep;
+	        break;
+        case 101: //e
+          state.data.rotate+=config.rotateStep;
+	        break;
+        case 97: //a
+          state.data.x-=config.moveStep;
+	        break;
+        case 115: //s
+          state.data.y+=config.moveStep;
+	        break;
+        case 100: //d
+          state.data.x+=config.moveStep;
+	        break;
+        case 122: //z
+          state.data.scale+=config.scaleStep;
+	        break;
+        case 120: //x
+          state.data.scale-=config.scaleStep;
+	        break;
+          
+        default:
+          console.log(e.which);
+          
+          //yeah, I know, but it looks better when it's here
+          break;
+      
+      
+        }
+      //console.log(['done...',state.data,state.node[0]]);
+      //reapply all. damn slow  
+      for(var i in state.data){
+        $t.attr('data-'+i,state.data[i]);
+        }
+        
+      window['--drawSlideGlobalHandler'](state.node[0],'whatever')
+        
+      }
+    });
+
+});
+</script>
+
 
 </body>
 </html>
